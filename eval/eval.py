@@ -105,12 +105,12 @@ def check_neurons(neurons, df_data, plot=True, name=None):
     cost_rgbs = []
 
     for i, row in df_data.iterrows():
-        if pd.isnull(row['most_likely_ID']):
+        if pd.isnull(row['autoID_1']):
             continue
-        ID = row['most_likely_ID']
+        ID = row['autoID_1']
         if pd.isnull(row['ID']):
             acc = 'gray'
-        elif row['ID'] == row['most_likely_ID']:
+        elif row['ID'] == row['autoID_1']:
             acc = 'green'
         else: 
             acc = 'red'
@@ -156,12 +156,12 @@ def comp_acc():
 
     df_accs = pd.DataFrame()
 
-    for folder in os.listdir('data/NP_FOCO'):
+    for folder in os.listdir('data/NP_FOCO_cropped'):
         if not folder[0:2] == '20':
             continue 
 
-        df_norm = fil.proc_FOCO('data/NP_FOCO/'+folder)
-        df_cropped = fil.proc_FOCO('data/NP_FOCO_cropped/'+folder)
+        df_norm = fil.proc_FOCO('data/NP_FOCO_cropped/'+folder)
+        df_cropped = fil.proc_FOCO('data/NP_FOCO_hist/'+folder)
         df_color_set = fil.proc_FOCO('data/NP_FOCO_set_color/'+folder)
 
         per_ID, per_correct, per_top2, correctID, correcttop2 = uti.check_accuracy(df_norm)

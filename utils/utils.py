@@ -100,8 +100,8 @@ def calc_costs(df_atlas, sigma, df_data):
 def check_accuracy(df):
 
     IDd = df.loc[pd.notna(df['ID']),:]
-    correctID = df.loc[df['ID']== df['most_likely_ID']]
-    correctSecond = df.loc[df['ID']== df['second_most_likely_ID']]
+    correctID = df.loc[df['ID']== df['autoID_1']]
+    correctSecond = df.loc[df['ID']== df['autoID_2']]
 
     correcttop2 = pd.concat([correctID,correctSecond]).drop_duplicates().reset_index(drop=True)
 
@@ -111,4 +111,22 @@ def check_accuracy(df):
 
 
     return per_ID, per_correct, per_top2, correctID, correcttop2
+
+def get_cumul_acc(df):
+    IDd = df.loc[pd.notna(df['ID']),:]
+    corr1 = df.loc[df['ID']==df['autoID_1']]
+    corr2 = df.loc[df['ID']==df['autoID_2']]
+    corr3 = df.loc[df['ID']==df['autoID_3']]
+    corr4 = df.loc[df['ID']==df['autoID_4']]
         
+    corr_cum_2 = pd.concat([corr1,corr2]).drop_duplicates().reset_index(drop=True)
+    corr_cum_3 = pd.concat([corr_cum_2,corr3]).drop_duplicates().reset_index(drop=True)
+    corr_cum_4 = pd.concat([corr_cum_3,corr4]).drop_duplicates().reset_index(drop=True)
+
+    per_ID = len(IDd.index)/len(df.index)
+    per_corr_1 = len(corr1.index)/len(IDd.index)
+    per_corr_2 = len(corr_cum_2.index)/len(IDd.index)
+    per_corr_3 = len(corr_cum_3.index)/len(IDd.index)
+    per_corr_4 = len(corr_cum_4.index)/len(IDd.index)
+
+    return IDd, per_ID, [per_corr_1, per_corr_2, per_corr_3, per_corr_4]

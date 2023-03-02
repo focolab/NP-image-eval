@@ -107,10 +107,10 @@ if __name__ == '__main__':
     xyz_mu, xyz_sigma, rgb_mu, rgb_sigma = process_atlas()
 
     for index, row in autID.iterrows():
-        autoID = row['most_likely_ID']
+        autoID = row['autoID_1']
         accuracy = -1
         if not row['ID'].isnull():
-            if row['most_likely_ID']==row['ID']:
+            if row['autoID_1']==row['ID']:
                 accuracy =1
             else:
                 accuracy =0

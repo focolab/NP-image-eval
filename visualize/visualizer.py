@@ -281,7 +281,7 @@ def plot_unrolled_acc(df_data, df_atlas):
     ax[1].axvline(180, ls='--', color='grey')
     ax[1].scatter(df_data['theta'], df_data['h'], c=color_norm)
     
-    IDs = np.asarray(acc_df['ID'])
+    IDs = np.asarray(df_data['ID'])
     
     for i, txt in enumerate(IDs):
         #ax[1].annotate(IDs[i], (df_data.loc[df_data['ID']==IDs[i]]['theta'], df_data.loc[df_data['ID']==IDs[i]]['h']))
