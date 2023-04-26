@@ -14,13 +14,13 @@ groups:
   - name: description
     dtype: text
     doc: description of image
-  - name: channels
-    dtype: text
+  - name: RGBW_channels
+    dtype: int8
     dims:
-    - channel descriptions
+    - channels
     shape:
     - null
-    doc: description of what each channel in the image maps to
+    doc: which channels in image map to RGBW
   - name: data
     dtype: int16
     dims:
