@@ -8,6 +8,7 @@ import scipy.optimize
 import os
 import process.file as fil
 import utils.utils as uti
+import seaborn as sns
 
 #use patches.ellipse to get ellipses
 
@@ -92,16 +93,22 @@ def plot_RGB_super(df, sigma, df_data):
     axs[1].scatter(rgb_data[:,0], rgb_data[:,2], c=color_norm)
     axs[2].scatter(rgb_data[:,1], rgb_data[:,2], c=color_norm)
 
-    fontsize= 16
+    fontsize= 24
     axs[0].set_title('red-green', fontsize=fontsize)
-    axs[0].set_xlabel('red', fontsize=fontsize)
-    axs[0].set_ylabel('green', fontsize=fontsize)
+    axs[0].set_xlabel('Z-score red', fontsize=fontsize)
+    axs[0].set_ylabel('Z-score green', fontsize=fontsize)
+    axs[0].tick_params(axis='both', which='major', labelsize=20)
+    axs[0].tick_params(axis='both', which='minor', labelsize=20)
     axs[1].set_title('red-blue', fontsize=fontsize)
-    axs[1].set_xlabel('red', fontsize=fontsize)
-    axs[1].set_ylabel('blue', fontsize=fontsize)
+    axs[1].set_xlabel('Z-score red', fontsize=fontsize)
+    axs[1].set_ylabel('Z-score blue', fontsize=fontsize)
+    axs[1].tick_params(axis='both', which='major', labelsize=20)
+    axs[1].tick_params(axis='both', which='minor', labelsize=20)
     axs[2].set_title('green-blue', fontsize=fontsize)
-    axs[2].set_xlabel('green', fontsize=fontsize)
-    axs[2].set_ylabel('blue', fontsize=fontsize)
+    axs[2].set_xlabel('Z-score green', fontsize=fontsize)
+    axs[2].set_ylabel('Z-score blue', fontsize=fontsize)
+    axs[2].tick_params(axis='both', which='major', labelsize=20)
+    axs[2].tick_params(axis='both', which='minor', labelsize=20)
 
 
     plt.show()
@@ -116,6 +123,9 @@ def plot_atlas_2d_views(df_atlas, sigma, df_data):
     fig = plt.figure(figsize=(15,6))
     ax = [plt.subplot(211)]
     ax.append(plt.subplot(212, sharex=ax[0]))
+
+    sns.set_context("poster")
+    sns.set(font_scale=2)
 
     #ax[0].plot(df_atlas['X'], df_atlas['Z'], 'o', mec='grey', ms=15)
     for i, row in df_atlas.iterrows():
@@ -211,6 +221,41 @@ def plot_atlas_unrolled_superimpose(df_atlas, df_data, png='plot-atlas-unrolled.
     ax[1].legend()
     ax[1].set_xlabel('Theta')
     ax[1].set_ylabel('X')
+
+    plt.tight_layout()
+    plt.savefig(png)
+    if show:
+        plt.show()
+
+def plot_atlas_unrolled_only(df_atlas, df_data, png='plot-atlas-unrolled.png', show=True):
+    """df needs: x/y/zcyl, ganglion, h, theta """
+
+    rgb_data = np.asarray(df_data[['R', 'G', 'B']])
+
+    ganglia = sorted(df_atlas['ganglion'].unique())
+    fig, ax = plt.subplots(ncols=1, nrows=1, figsize=(12, 8))
+
+    sns.set_context("poster")
+    sns.set(font_scale=2)
+
+    for g in ganglia:
+        dfg = df_atlas[df_atlas['ganglion'] == g]
+        ax.plot(dfg['theta'], dfg['h'], 'o', lw=0, label=g, markerfacecolor='None')
+        
+    colors_min = np.amin(rgb_data, axis=0)
+    colors_max = np.amax(rgb_data, axis=0)
+    color_norm = np.divide(rgb_data-colors_min, colors_max-colors_min)
+
+    ax.axvspan(-135, -45, edgecolor=None, color='lightgrey', alpha=0.4, zorder=0, lw=0)
+    ax.axvspan(45, 135, edgecolor=None, color='lightgrey', alpha=0.4, zorder=0, lw=0)
+    ax.axvline(-180, ls='--', color='grey')
+    ax.axvline(180, ls='--', color='grey')
+    ax.scatter(df_data['theta'], df_data['h'], c=color_norm)
+    ax.legend()
+    ax.set_xlabel('Theta')
+    ax.set_ylabel('X')
+
+    sns.move_legend(ax, "upper left", bbox_to_anchor=(1,1))
 
     plt.tight_layout()
     plt.savefig(png)

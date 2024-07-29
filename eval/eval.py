@@ -156,19 +156,19 @@ def comp_acc():
 
     df_accs = pd.DataFrame()
 
-    for folder in os.listdir('data/NP_FOCO_cropped'):
+    for folder in os.listdir('/Users/danielysprague/foco_lab/data/NP_FOCO_cropped'):
         if not folder[0:2] == '20':
             continue 
 
-        df_norm = fil.proc_FOCO('data/NP_FOCO_cropped/'+folder)
-        df_cropped = fil.proc_FOCO('data/NP_FOCO_hist/'+folder)
-        df_color_set = fil.proc_FOCO('data/NP_FOCO_set_color/'+folder)
+        df_norm = fil.proc_FOCO('/Users/danielysprague/foco_lab/data/NP_FOCO_cropped/'+folder)
+        df_cropped = fil.proc_FOCO('/Users/danielysprague/foco_lab/data/NP_FOCO_hist_match/'+folder)
+        df_color_set = fil.proc_FOCO('/Users/danielysprague/foco_lab/data/NP_FOCO_resample/'+folder)
 
         per_ID, per_correct, per_top2, correctID, correcttop2 = uti.check_accuracy(df_norm)
         per_ID_crop, per_correct_crop, per_top2_crop, correctID_crop, correcttop2_crop = uti.check_accuracy(df_cropped)
         per_ID_color, per_correct_color, per_top2_color, correctID_color, correcttop2_color = uti.check_accuracy(df_color_set)
 
-        df_accs = df_accs.append({'Name':folder[:-4], 'Percent IDd':per_ID, 'Percent correct':per_correct, 'Percent correct cropped':per_correct_crop, 'Percent correct color set':per_correct_color}, ignore_index=True)
+        df_accs = pd.concat([df_accs, pd.DataFrame([{'Name':folder[:-4], 'Percent IDd':per_ID, 'Percent correct':per_correct, 'Percent correct cropped':per_correct_crop, 'Percent correct color set':per_correct_color}])], ignore_index=True)
 
     fig, ax = plt.subplots(2,1)
 

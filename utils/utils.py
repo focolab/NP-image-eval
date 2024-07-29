@@ -10,7 +10,7 @@ def maha_dist(data, mu, sigma):
     left_data = np.dot(data_mu, inv_sigma)
     mahal = np.dot(left_data, data_mu.T)
 
-    if type(mahal) ==np.float:
+    if type(mahal) ==float:
         return np.sqrt(mahal)
     else:
         return np.sqrt(mahal.diagonal())
